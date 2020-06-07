@@ -17,17 +17,13 @@
         </tr>
         <c:forEach items="${mealsTo}" var="mealTo">
             <jsp:useBean id="mealTo" type="ru.javawebinar.topjava.model.MealTo"/>
+            <c:set var="excess" value="${mealTo.excess}"/>
+            <c:set var="color"
+                   value="${excess ? 'red' : 'green'}"/>
             <tr>
-                <td>${mealTo.date}</td>
-                <td>${mealTo.description}</td>
-                <c:choose>
-                    <c:when test="${mealTo.excess}">
-                        <td><span style="color: red; ">${mealTo.calories}</span></td>
-                    </c:when>
-                    <c:otherwise>
-                        <td><span style="color: green; ">${mealTo.calories}</span></td>
-                    </c:otherwise>
-                </c:choose>
+                <td><span style="color: ${color};">${mealTo.date} ${mealTo.time}</span></td>
+                <td><span style="color: ${color};">${mealTo.description}</span></td>
+                <td><span style="color: ${color};">${mealTo.calories}</span></td>
             </tr>
         </c:forEach>
     </table>
