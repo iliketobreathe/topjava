@@ -1,8 +1,11 @@
 package ru.javawebinar.topjava.model;
 
+import ru.javawebinar.topjava.util.CounterUtil;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Meal {
     private LocalDateTime dateTime;
@@ -13,18 +16,11 @@ public class Meal {
 
     private final int id;
 
-    private static int count = 1;
-
     public Meal(LocalDateTime dateTime, String description, int calories) {
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
-        this.id = count;
-        countIncrement();
-    }
-
-    synchronized void countIncrement() {
-        count++;
+        this.id = CounterUtil.countIncrement();
     }
 
     public LocalDateTime getDateTime() {
@@ -51,15 +47,19 @@ public class Meal {
         return id;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Meal meal = (Meal) o;
+        return calories == meal.calories &&
+                id == meal.id &&
+                Objects.equals(dateTime, meal.dateTime) &&
+                Objects.equals(description, meal.description);
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setCalories(int calories) {
-        this.calories = calories;
+    @Override
+    public int hashCode() {
+        return Objects.hash(dateTime, description, calories, id);
     }
 }

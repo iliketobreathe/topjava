@@ -9,9 +9,9 @@
 <hr>
 <h2>Meals</h2>
 <section>
+    <a href="meals?action=add">Добавить новую запись</a><br/><br/>
     <table border="1" cellpadding="8" cellspacing="0">
         <tr>
-            <th>id</th>
             <th>Data</th>
             <th>Description</th>
             <th>Calories</th>
@@ -24,11 +24,11 @@
             <c:set var="color"
                    value="${mealTo.excess ? 'LightPink' : 'LightGreen'}"/>
             <tr style="background-color: ${color}">
-                <td><a href="meals?id=${mealTo.id}&action=view">${mealTo.id}</a></td>
                 <td>${mealTo.date} ${mealTo.time}</td>
                 <td>${mealTo.description}</td>
                 <td>${mealTo.calories}</td>
                 <td><a href="meals?id=${mealTo.id}&action=delete">delete</a></td>
+                <td><a href="meals?id=${mealTo.id}&action=edit">edit</a></td>
             </tr>
         </c:forEach>
     </table>
