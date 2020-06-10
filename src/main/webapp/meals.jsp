@@ -11,18 +11,24 @@
 <section>
     <table border="1" cellpadding="8" cellspacing="0">
         <tr>
-            <th>Дата</th>
-            <th>Описание</th>
-            <th>Калории</th>
+            <th>id</th>
+            <th>Data</th>
+            <th>Description</th>
+            <th>Calories</th>
+            <th></th>
+            <th></th>
         </tr>
+        <jsp:useBean id="mealsTo" scope="request" type="java.util.List"/>
         <c:forEach items="${mealsTo}" var="mealTo">
             <jsp:useBean id="mealTo" type="ru.javawebinar.topjava.model.MealTo"/>
             <c:set var="color"
-                   value="${mealTo.excess ? 'red' : 'green'}"/>
-            <tr style="color: ${color}">
+                   value="${mealTo.excess ? 'LightPink' : 'LightGreen'}"/>
+            <tr style="background-color: ${color}">
+                <td><a href="meals?id=${mealTo.id}&action=view">${mealTo.id}</a></td>
                 <td>${mealTo.date} ${mealTo.time}</td>
                 <td>${mealTo.description}</td>
                 <td>${mealTo.calories}</td>
+                <td><a href="meals?id=${mealTo.id}&action=delete">delete</a></td>
             </tr>
         </c:forEach>
     </table>
