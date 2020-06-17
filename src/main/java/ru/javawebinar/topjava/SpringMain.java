@@ -4,11 +4,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.web.SecurityUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 import ru.javawebinar.topjava.web.user.AdminRestController;
 
-import javax.xml.bind.SchemaOutputResolver;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 
@@ -21,8 +20,8 @@ public class SpringMain {
             adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Role.ADMIN));
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
             System.out.println(mealRestController.getAll());
-           // System.out.println(mealRestController.get(1));
-            System.out.println(mealRestController.getAllByTime(2000, LocalTime.of(15, 00), LocalTime.of(23, 59)));
+            System.out.println(mealRestController.getAllFiltered(LocalDate.MIN, LocalDate.MAX, LocalTime.MIN, LocalTime.MAX));
+            // System.out.println(mealRestController.get(1));
         }
     }
 }
