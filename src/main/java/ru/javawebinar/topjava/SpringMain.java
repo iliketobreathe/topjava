@@ -22,6 +22,13 @@ public class SpringMain {
             System.out.println(mealRestController.getAll());
             System.out.println(mealRestController.getAllFiltered(LocalDate.MIN, LocalDate.MAX, LocalTime.MIN, LocalTime.MAX));
             // System.out.println(mealRestController.get(1));
+            System.out.println(mealRestController.getAllFiltered(
+                    LocalDate.of(2020, 1, 30),
+                    LocalDate.of(2020, 1, 31),
+                    LocalTime.of(0, 0),
+                    LocalTime.of(20, 0))
+            );
+
         }
     }
 }
