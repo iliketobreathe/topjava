@@ -24,7 +24,7 @@ import static ru.javawebinar.topjava.UserTestData.NOT_FOUND;
         "classpath:spring/spring-db.xml"
 })
 @RunWith(SpringRunner.class)
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"), executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
 
     static {
@@ -43,6 +43,11 @@ public class MealServiceTest {
         assertMatch(meal, YOUR_MEAL);
     }
 
+    @Test (expected = NotFoundException.class)
+    public void getForeign() {
+        service.get(FOREIGN_MEAL_ID, YOUR_USER_ID);
+    }
+
     @Test
     public void getNotFound() throws Exception {
         assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND, YOUR_USER_ID));
@@ -52,6 +57,11 @@ public class MealServiceTest {
     public void delete() {
         service.delete(YOUR_MEAL_ID, YOUR_USER_ID);
         assertNull(repository.get(YOUR_MEAL_ID, YOUR_USER_ID));
+    }
+
+    @Test (expected = NotFoundException.class)
+    public void deleteForeign() {
+        service.delete(FOREIGN_MEAL_ID, YOUR_USER_ID);
     }
 
     @Test
