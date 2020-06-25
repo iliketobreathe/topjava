@@ -14,12 +14,10 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.NOT_FOUND;
-import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -34,59 +32,65 @@ public class MealServiceTest {
     }
 
     @Autowired
-    MealRepository repository;
+    private MealRepository repository;
 
     @Autowired
-    MealService service;
+    private MealService service;
 
     @Test
     public void get() {
-        Meal meal = service.get(YOUR_MEAL_ID, authUserId());
-        assertThat(meal).isEqualToComparingFieldByField(YOUR_MEAL);
+        Meal meal = service.get(YOUR_MEAL_ID, YOUR_USER_ID);
+        assertMatch(meal, YOUR_MEAL);
     }
 
     @Test
     public void getNotFound() throws Exception {
-        assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND, authUserId()));
+        assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND, YOUR_USER_ID));
     }
 
     @Test
     public void delete() {
-        service.delete(YOUR_MEAL_ID, authUserId());
-        assertNull(repository.get(YOUR_MEAL_ID, authUserId()));
+        service.delete(YOUR_MEAL_ID, YOUR_USER_ID);
+        assertNull(repository.get(YOUR_MEAL_ID, YOUR_USER_ID));
     }
 
     @Test
     public void deletedNotFound() throws Exception {
-        assertThrows(NotFoundException.class, () -> service.delete(FOREIGN_MEAL_ID, authUserId()));
+        assertThrows(NotFoundException.class, () -> service.delete(FOREIGN_MEAL_ID, YOUR_USER_ID));
     }
 
     @Test
     public void getBetweenInclusive() {
-        assertThat(service.getBetweenInclusive(START_DATE, END_DATE, authUserId())).usingElementComparatorIgnoringFields("id").isEqualTo(MEALS_FILTERED);
+        assertMatch(service.getBetweenInclusive(START_DATE, END_DATE, YOUR_USER_ID), MEALS_FILTERED);
     }
 
     @Test
     public void getAll() {
-        List<Meal> all = service.getAll(authUserId());
-        assertThat(all).usingElementComparatorIgnoringFields("id").isEqualTo(MEALS);
+        List<Meal> all = service.getAll(YOUR_USER_ID);
+        assertMatch(all, MEALS);
     }
 
     @Test
     public void update() {
-        Meal updated = getUpdated();
-        service.update(updated, authUserId());
-        assertThat(service.get(YOUR_MEAL_ID, authUserId())).isEqualToComparingFieldByField(updated);
+        Meal updated = getUpdated(YOUR_MEAL);
+        service.update(updated, YOUR_USER_ID);
+        assertMatch(service.get(YOUR_MEAL_ID, YOUR_USER_ID), updated);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void updateForeign() {
+        Meal updated = getUpdated(FOREIGN_MEAL);
+        service.update(updated, YOUR_USER_ID);
     }
 
     @Test
     public void create() {
         Meal newMeal = getNew();
-        Meal created = service.create(newMeal, authUserId());
+        Meal created = service.create(newMeal, YOUR_USER_ID);
         Integer newId = created.getId();
         newMeal.setId(newId);
-        assertThat(created).isEqualToComparingFieldByField(newMeal);
-        assertThat(service.get(newId, authUserId())).isEqualToComparingFieldByField(newMeal);
+        assertMatch(created, newMeal);
+        assertMatch(service.get(newId, YOUR_USER_ID), newMeal);
     }
 
 
