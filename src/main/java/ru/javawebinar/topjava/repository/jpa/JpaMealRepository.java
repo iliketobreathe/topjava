@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.repository.jpa;
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-@Transactional
+@Transactional(readOnly = true)
 public class JpaMealRepository implements MealRepository {
 
     @PersistenceContext
@@ -26,7 +27,7 @@ public class JpaMealRepository implements MealRepository {
             em.persist(meal);
             return meal;
         } else {
-            Meal existedMeal = em.getReference(Meal.class, meal.id());
+            Meal existedMeal = em.find(Meal.class, meal.id());
             if (existedMeal.getUser().getId() == userId) {
                 meal.setUser(existedMeal.getUser());
                 return em.merge(meal);
@@ -36,6 +37,7 @@ public class JpaMealRepository implements MealRepository {
     }
 
     @Override
+    @Transactional
     public boolean delete(int id, int userId) {
         return em.createNamedQuery(Meal.DELETE)
                 .setParameter("id", id)
@@ -45,10 +47,11 @@ public class JpaMealRepository implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        Meal meal = em.createNamedQuery(Meal.GET, Meal.class)
+        List<Meal> meals = em.createNamedQuery(Meal.GET, Meal.class)
                 .setParameter("id", id)
                 .setParameter("userId", userId)
-                .getSingleResult();
+                .getResultList();
+        Meal meal = DataAccessUtils.singleResult(meals);
         return meal != null && meal.getUser().getId() == userId ? meal : null;
     }
 
