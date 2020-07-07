@@ -1,32 +1,31 @@
 package ru.javawebinar.topjava.repository.datajpa;
 
-import javassist.runtime.Desc;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Repository
+@Transactional(readOnly = true)
 public class DataJpaMealRepository implements MealRepository {
     private static final Sort SORT_DATE_TIME_DESC = Sort.by(Sort.Direction.DESC, "date_time");
 
-    private final DataJpaUserRepository dataJpaUserRepository;
-
     private final CrudMealRepository crudRepository;
+    private final CrudUserRepository crudUserRepository;
 
-    public DataJpaMealRepository(CrudMealRepository crudRepository, DataJpaUserRepository dataJpaUserRepository) {
+    public DataJpaMealRepository(CrudMealRepository crudRepository, CrudUserRepository crudUserRepository) {
         this.crudRepository = crudRepository;
-        this.dataJpaUserRepository = dataJpaUserRepository;
+        this.crudUserRepository = crudUserRepository;
     }
 
     @Override
+    @Transactional
     public Meal save(Meal meal, int userId) {
-        meal.setUser(dataJpaUserRepository.get(userId));
+        meal.setUser(crudUserRepository.getOne(userId));
         if(!meal.isNew() && get(meal.getId(), userId) == null) {
             return null;
         }
@@ -34,6 +33,7 @@ public class DataJpaMealRepository implements MealRepository {
     }
 
     @Override
+    @Transactional
     public boolean delete(int id, int userId) {
         return crudRepository.delete(id, userId) != 0;
     }
