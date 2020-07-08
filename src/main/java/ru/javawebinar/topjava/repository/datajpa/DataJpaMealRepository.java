@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-@Transactional(readOnly = true)
 public class DataJpaMealRepository implements MealRepository {
     private static final Sort SORT_DATE_TIME_DESC = Sort.by(Sort.Direction.DESC, "date_time");
 
@@ -33,7 +32,6 @@ public class DataJpaMealRepository implements MealRepository {
     }
 
     @Override
-    @Transactional
     public boolean delete(int id, int userId) {
         return crudRepository.delete(id, userId) != 0;
     }
