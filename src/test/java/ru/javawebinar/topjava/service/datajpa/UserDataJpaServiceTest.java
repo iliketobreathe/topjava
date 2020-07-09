@@ -4,6 +4,6 @@ import org.springframework.test.context.ActiveProfiles;
 import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.service.UserServiceTest;
 
-@ActiveProfiles(profiles = {Profiles.DATAJPA})
+@ActiveProfiles(profiles = Profiles.DATAJPA)
 public class UserDataJpaServiceTest extends UserServiceTest {
 }
