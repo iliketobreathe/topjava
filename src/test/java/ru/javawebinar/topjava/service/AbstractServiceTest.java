@@ -5,6 +5,9 @@ import org.junit.Rule;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -13,7 +16,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.ActiveDbProfileResolver;
 import ru.javawebinar.topjava.TimingRules;
 
+import javax.annotation.PostConstruct;
+
 import static org.junit.Assert.assertThrows;
+import static ru.javawebinar.topjava.Profiles.DATAJPA;
+import static ru.javawebinar.topjava.Profiles.JPA;
 import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
 
 @ContextConfiguration({
@@ -24,6 +31,16 @@ import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
 abstract public class AbstractServiceTest {
+
+    @Autowired
+    Environment environment;
+
+    boolean isProfile;
+
+    @PostConstruct
+    public void init() {
+        isProfile = environment.acceptsProfiles(Profiles.of(JPA, DATAJPA));
+    }
 
     @ClassRule
     public static ExternalResource summary = TimingRules.SUMMARY;
