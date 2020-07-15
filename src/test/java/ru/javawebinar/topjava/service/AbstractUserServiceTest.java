@@ -69,7 +69,9 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     public void update() throws Exception {
         User updated = getUpdated();
         service.update(updated);
-        USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
+        USER_MATCHER.assertMatch(service.get(USER_ID), USER);
+        List<User> all = service.getAll();
+        USER_MATCHER.assertMatch(all, ADMIN, USER);
     }
 
     @Test
@@ -80,7 +82,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void createWithException() throws Exception {
-        Assume.assumeTrue(isProfile);
+        Assume.assumeTrue(isValidationTestRequired);
         validateRootCause(() -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.create(new User(null, "User", "  ", "password", Role.USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "  ", Role.USER)), ConstraintViolationException.class);

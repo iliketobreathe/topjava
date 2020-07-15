@@ -23,7 +23,7 @@ public class UserTestData {
     }
 
     public static User getUpdated() {
-        User updated = new User(USER);
+        User updated = USER;
         updated.setName("UpdatedName");
         updated.setCaloriesPerDay(330);
         return updated;

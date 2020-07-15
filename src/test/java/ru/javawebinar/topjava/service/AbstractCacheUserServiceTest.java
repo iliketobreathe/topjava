@@ -8,9 +8,6 @@ import ru.javawebinar.topjava.repository.JpaUtil;
 public abstract class AbstractCacheUserServiceTest extends AbstractUserServiceTest {
 
     @Autowired
-    protected UserService service;
-
-    @Autowired
     private CacheManager cacheManager;
 
     @Autowired

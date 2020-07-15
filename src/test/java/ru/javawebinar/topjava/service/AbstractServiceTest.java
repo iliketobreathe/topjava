@@ -35,11 +35,11 @@ abstract public class AbstractServiceTest {
     @Autowired
     Environment environment;
 
-    boolean isProfile;
+    boolean isValidationTestRequired;
 
     @PostConstruct
     public void init() {
-        isProfile = environment.acceptsProfiles(Profiles.of(JPA, DATAJPA));
+        isValidationTestRequired = environment.acceptsProfiles(Profiles.of(JPA, DATAJPA));
     }
 
     @ClassRule
