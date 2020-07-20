@@ -1,8 +1,10 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.dao.DataAccessException;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -20,6 +22,14 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Autowired
     protected UserService service;
+
+    @Autowired
+    private CacheManager cacheManager;
+
+    @Before
+    public void setUp() throws Exception {
+        cacheManager.getCache("users").clear();
+    }
 
     @Test
     public void create() throws Exception {
@@ -69,9 +79,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     public void update() throws Exception {
         User updated = getUpdated();
         service.update(updated);
-        USER_MATCHER.assertMatch(service.get(USER_ID), USER);
-        List<User> all = service.getAll();
-        USER_MATCHER.assertMatch(all, ADMIN, USER);
+        USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
     }
 
     @Test
