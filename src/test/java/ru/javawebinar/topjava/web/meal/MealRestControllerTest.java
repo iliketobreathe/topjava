@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
@@ -81,7 +82,12 @@ public class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getBetween() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "filtered?startDate=2020-01-30T00:00:00&startTime=2020-01-30T00:00:00&endDate=2020-01-30T23:59:59&endTime=2020-01-30T23:59:59"))
+        MockHttpServletRequestBuilder mockHttpServletRequestBuilder = MockMvcRequestBuilders.get(REST_URL + "filtered")
+                .param("startDate", "2020-01-30T00:00:00")
+                .param("startTime", "2020-01-30T00:00:00")
+                .param("endDate", "2020-01-30T23:59:59")
+                .param("endTime", "2020-01-30T23:59:59");
+        perform(mockHttpServletRequestBuilder)
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
