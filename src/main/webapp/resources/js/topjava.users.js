@@ -39,4 +39,9 @@ $(function () {
             })
         }
     );
+    $(".delete").click(function () {
+        if (confirm('Are you sure?')) {
+            deleteRow($(this).closest('tr').attr("id"));
+        }
+    });
 });

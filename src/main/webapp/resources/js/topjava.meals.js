@@ -33,4 +33,9 @@ $(function () {
             })
         }
     );
+    $(".delete").click(function () {
+        if (confirm('Are you sure?')) {
+            deleteRow($(this).attr("id"));
+        }
+    });
 });
